@@ -159,8 +159,24 @@ function Promise() {
 
 function Contact() {
   const [sent, setSent] = useState(false);
-  const submit = e => { e.preventDefault(); setSent(true); };
-  return <section id="contact" className="contact section-light"><div className="container"><div className="section-top"><span>06 — LET'S TALK</span><span>START A CONVERSATION</span></div><div className="contact-grid"><div><Reveal><h2>LET'S CREATE<br />SOMETHING WORTH<br /><em>REMEMBERING.</em></h2></Reveal><p className="contact-intro">Have a brand that needs a fresh perspective? Launching something new? Looking for a creative partner?</p><div className="contact-links"><a href="mailto:[EMAIL]">[EMAIL] <ArrowUpRight size={15} /></a><a href="tel:[PHONE]">[PHONE] <ArrowUpRight size={15} /></a></div></div><form onSubmit={submit}><label>NAME<input required placeholder="Your name" /></label><label>EMAIL<input required type="email" placeholder="you@company.com" /></label><label>PROJECT TYPE<select defaultValue=""><option value="" disabled>Select one</option><option>Branding</option><option>Advertising</option><option>Social Media</option><option>Video & Motion</option><option>Creative Design</option><option>Visual Storytelling</option></select></label><label>MESSAGE<textarea required rows="5" placeholder="Tell us about your idea..." /></label><button className="submit-button" type="submit">{sent ? <>MESSAGE READY <Check size={17} /></> : <>SEND INQUIRY <ArrowUpRight size={17} /></>}</button>{sent && <p className="form-note">Thanks — your inquiry is prepared. Connect the form to your preferred email/backend when the real contact endpoint is available.</p>}</form></div></div></section>;
+  const [draft, setDraft] = useState('');
+  const [copyStatus, setCopyStatus] = useState('');
+  const submit = e => {
+    e.preventDefault();
+    const values = new FormData(e.currentTarget);
+    setDraft(`Name: ${values.get('name')}\nEmail: ${values.get('email')}\nProject type: ${values.get('project')}\n\n${values.get('message')}`);
+    setCopyStatus('');
+    setSent(true);
+  };
+  const copyDraft = async () => {
+    try {
+      await navigator.clipboard.writeText(draft);
+      setCopyStatus('Inquiry copied to clipboard.');
+    } catch {
+      setCopyStatus('Clipboard access is unavailable. Select and copy the draft above.');
+    }
+  };
+  return <section id="contact" className="contact section-light"><div className="container"><div className="section-top"><span>06 — LET'S TALK</span><span>START A CONVERSATION</span></div><div className="contact-grid"><div><Reveal><h2>LET'S CREATE<br />SOMETHING WORTH<br /><em>REMEMBERING.</em></h2></Reveal><p className="contact-intro">Have a brand that needs a fresh perspective? Launching something new? Looking for a creative partner?</p></div><form onSubmit={submit}><label>NAME<input name="name" required placeholder="Your name" /></label><label>EMAIL<input name="email" required type="email" placeholder="you@company.com" /></label><label>PROJECT TYPE<select name="project" required defaultValue=""><option value="" disabled>Select one</option><option>Branding</option><option>Advertising</option><option>Social Media</option><option>Video & Motion</option><option>Creative Design</option><option>Visual Storytelling</option></select></label><label>MESSAGE<textarea name="message" required rows="5" placeholder="Tell us about your idea..." /></label><button className="submit-button" type="submit">{sent ? <>DRAFT READY <Check size={17} /></> : <>PREPARE INQUIRY <ArrowUpRight size={17} /></>}</button>{sent && <div className="form-draft"><p className="form-note" aria-live="polite">Your message has not been sent. Copy this draft and send it from your email app.</p><textarea aria-label="Prepared inquiry draft" readOnly rows="5" value={draft} /><div className="form-draft-actions"><button className="copy-inquiry" type="button" onClick={copyDraft}>COPY MESSAGE <ArrowUpRight size={15} /></button><span className="form-note" aria-live="polite">{copyStatus}</span></div></div>}</form></div></div></section>;
 }
 
 function Footer() {

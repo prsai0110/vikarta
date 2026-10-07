@@ -29,9 +29,9 @@ npm run preview
 - Scroll-reveal process section
 - Interactive work/case-study modal
 - Premium final CTA
-- Contact form UI with validation
+- Contact inquiry draft form with validation and copy-to-clipboard
 - Responsive desktop/tablet/mobile layouts
 - Reduced-motion support
 - No fake client logos, testimonials, awards, or statistics
 
-Real phone/email/website/social details are intentionally left as placeholders until Vikarta provides them.
+Contact details and a message-delivery service are not configured. The form prepares a copyable draft but does not send it.
